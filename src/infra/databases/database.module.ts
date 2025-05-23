@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { AUTH_DATA_SOURCE_NAME } from '@/shared/constants/data-source-name.constant';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { USER_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
-import { UserRepository } from './databases/typeorm/auth-db/repositories/user.repository';
-import { optionsFactory } from '@/shared/utils/database-factory.util';
-import { DataSource } from 'typeorm';
 import { authDatabaseConfigOptions } from '@/configs/auth-database.config';
-import { UserSchema } from './databases/typeorm/auth-db/entities/user.entity';
+import { AUTH_DATA_SOURCE_NAME } from '@/shared/constants/data-source-name.constant';
+import { USER_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
+import { optionsFactory } from '@/shared/utils/database-factory.util';
+import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { UserSchema } from './typeorm/auth-db/entities/user.entity';
+import { UserRepository } from './typeorm/auth-db/repositories/user.repository';
 
 @Module({
   imports: [
@@ -39,6 +39,6 @@ import { ConfigService } from '@nestjs/config';
       inject: ['DATA_SOURCE'],
     },
   ],
-  exports: [USER_REPOSITORY_TOKEN, 'DATA_SOURCE'],
+  exports: [USER_REPOSITORY_TOKEN],
 })
-export class InfrastructureModule {}
+export class DatabaseModule {}

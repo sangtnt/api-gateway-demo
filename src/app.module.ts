@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { InfrastructureModule } from './infra/infra.module';
 import { PresentationModule } from './presentation/presentation.module';
 import { LoggerModule } from './shared/logger/logger.module';
 import { getLoggerOptions } from './configs/logger.config';
 import appConfig from './configs/app.config';
 import authDatabaseConfig from './configs/auth-database.config';
+import { DatabaseModule } from './infra/databases/database.module';
 
 @Module({
   imports: [
@@ -16,8 +16,8 @@ import authDatabaseConfig from './configs/auth-database.config';
       cache: true,
     }),
     LoggerModule.forRoot(getLoggerOptions()),
-    InfrastructureModule,
     PresentationModule,
+    DatabaseModule,
   ],
 })
 export class AppModule {}

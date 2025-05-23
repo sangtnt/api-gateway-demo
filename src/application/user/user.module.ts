@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CreateUsersUseCase } from './usecases/create-users.usecase';
-import { InfrastructureModule } from '@/infra/infra.module';
+import { DatabaseModule } from '@/infra/databases/database.module';
 
 @Module({
-  imports: [InfrastructureModule],
+  imports: [DatabaseModule],
   providers: [CreateUsersUseCase],
   exports: [CreateUsersUseCase],
 })
