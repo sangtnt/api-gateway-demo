@@ -19,6 +19,9 @@ import { ConfigService } from '@nestjs/config';
                   'localhost:9092',
                 ],
               },
+              consumer: {
+                groupId: configService.get<string>('KAFKA_CONSUMER_GROUP') || 'default-group',
+              },
             },
           }),
           name: 'KAFKA_SERVICE',
