@@ -3,6 +3,7 @@ import { ClientProviderOptions, ClientsModule, Transport } from '@nestjs/microse
 import { MailRepository } from './repositories/mail.repository';
 import { MAIL_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
 import { ConfigService } from '@nestjs/config';
+import { EnvironmentVariables } from '@/shared/constants/env.constant';
 
 @Module({
   imports: [
@@ -14,13 +15,17 @@ import { ConfigService } from '@nestjs/config';
             transport: Transport.KAFKA,
             options: {
               client: {
-                clientId: configService.get<string>('KAFKA_CLIENT_ID') || 'default-client-id',
-                brokers: configService.get<string>('KAFKA_BROKERS')?.split(',') || [
-                  'localhost:9092',
-                ],
+                clientId:
+                  configService.get<string>(EnvironmentVariables.KAFKA_CLIENT_ID) ||
+                  'default-client-id',
+                brokers: configService
+                  .get<string>(EnvironmentVariables.KAFKA_BROKERS)
+                  ?.split(',') || ['localhost:9092'],
               },
               consumer: {
-                groupId: configService.get<string>('KAFKA_CONSUMER_GROUP') || 'default-group',
+                groupId:
+                  configService.get<string>(EnvironmentVariables.KAFKA_CONSUMER_GROUP_ID) ||
+                  'default-group',
               },
             },
           }),
