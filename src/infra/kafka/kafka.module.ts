@@ -1,22 +1,31 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientProviderOptions, ClientsModule, Transport } from '@nestjs/microservices';
 import { MailRepository } from './repositories/mail.repository';
 import { MAIL_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'auth-service-backend',
-            brokers: ['localhost:9092'],
-          },
+    ClientsModule.registerAsync({
+      clients: [
+        {
+          useFactory: (configService: ConfigService): ClientProviderOptions => ({
+            name: 'KAFKA_SERVICE',
+            transport: Transport.KAFKA,
+            options: {
+              client: {
+                clientId: configService.get<string>('KAFKA_CLIENT_ID') || 'default-client-id',
+                brokers: configService.get<string>('KAFKA_BROKERS')?.split(',') || [
+                  'localhost:9092',
+                ],
+              },
+            },
+          }),
+          name: 'KAFKA_SERVICE',
+          inject: [ConfigService],
         },
-      },
-    ]),
+      ],
+    }),
   ],
   providers: [
     {
