@@ -3,10 +3,9 @@ import { UserEntity } from '../entities/user.entity';
 
 export interface IUserRepository extends IRepository<UserEntity> {
   /**
-   * Check if the provided emails and phones are available.
-   * @param emails - An array of email addresses to check.
-   * @param phones - An array of phone numbers to check.
-   * @returns A promise that resolves to a boolean indicating whether the emails and phones are available.
+   * Check if the user is available (not already registered).
+   * @param user The user to check.
+   * @returns A promise that resolves to true if the user is available, false otherwise.
    */
-  checkAvailableEmailsAndPhones(emails: string[], phones: string[]): Promise<boolean>;
+  checkExistUser(email: string | undefined, phoneNumber: string | undefined): Promise<boolean>;
 }

@@ -5,12 +5,12 @@ import { join } from 'path';
 export const grpcOptions: GrpcOptions = {
   transport: Transport.GRPC,
   options: {
-    package: ['auth.user.v1'],
-    protoPath: ['auth/user/v1/user.proto'],
+    package: ['auth.v1'],
+    protoPath: ['auth/v1/auth.proto'],
     url: `${process.env.HOST}:${process.env.GRPC_PORT}`,
     loader: {
       keepCase: false,
-      includeDirs: [join(__dirname, '../..', 'src/shared/grpc/protos')],
+      includeDirs: [join(__dirname, '../..', 'src/shared/grpc/protos/auth_service')],
     },
     keepalive: {
       keepaliveTimeMs: 10 * 1000,

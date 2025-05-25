@@ -5,7 +5,7 @@ import { BaseSchema } from '../../base/base.entity';
 export class UserSchema extends BaseSchema {
   @Column({ name: 'user_name', type: 'varchar', length: 255, unique: true })
   @Index()
-  userName?: string;
+  userName: string;
 
   @Column({ name: 'email', type: 'varchar', length: 255, unique: true, nullable: true })
   @Index()
@@ -25,16 +25,11 @@ export class UserSchema extends BaseSchema {
     name: 'hashed_password',
     type: 'varchar',
     length: 255,
-    nullable: true,
-    select: false,
   })
-  password?: string;
+  password: string;
 
   @Column({ name: 'first_name', type: 'varchar', length: 100, nullable: true })
-  firstName?: string;
-
-  @Column({ name: 'last_name', type: 'varchar', length: 100, nullable: true })
-  lastName?: string;
+  displayName?: string;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean;

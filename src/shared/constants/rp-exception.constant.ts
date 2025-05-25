@@ -17,6 +17,12 @@ export const ErrorCodes = {
     logLevel: LogLevel.ERROR,
   },
 
+  INVALID_VERIFICATION_CODE: {
+    code: 'AUTH-BE-INVALID_VERIFICATION_CODE',
+    message: 'Invalid verification code',
+    logLevel: LogLevel.ERROR,
+  },
+
   DATA_EXISTS: {
     code: 'AUTH-BE-DATA_EXIST',
     message: 'Data already exists',

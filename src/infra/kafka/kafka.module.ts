@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { KafkaRepository } from './repositories/kafka.repository';
-import { KAFKA_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
+import { MailRepository } from './repositories/mail.repository';
+import { MAIL_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
 
 @Module({
   imports: [
@@ -11,6 +11,7 @@ import { KAFKA_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.con
         transport: Transport.KAFKA,
         options: {
           client: {
+            clientId: 'auth-service-backend',
             brokers: ['localhost:9092'],
           },
         },
@@ -19,10 +20,10 @@ import { KAFKA_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.con
   ],
   providers: [
     {
-      provide: KAFKA_REPOSITORY_TOKEN,
-      useClass: KafkaRepository,
+      provide: MAIL_REPOSITORY_TOKEN,
+      useClass: MailRepository,
     },
   ],
-  exports: [KAFKA_REPOSITORY_TOKEN],
+  exports: [MAIL_REPOSITORY_TOKEN],
 })
 export class KafkaModule {}

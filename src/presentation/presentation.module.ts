@@ -1,9 +1,9 @@
 import { ApplicationModule } from '@/application/application.module';
 import { Module } from '@nestjs/common';
-import { UserController } from './grpc/user/user.controller';
+import { AuthController } from './grpc/auth.controller';
 
 @Module({
   imports: [ApplicationModule],
-  controllers: [UserController],
+  controllers: [AuthController],
 })
 export class PresentationModule {}

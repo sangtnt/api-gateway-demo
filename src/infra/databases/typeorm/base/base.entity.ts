@@ -18,8 +18,8 @@ export abstract class BaseSchema implements BaseEntity {
   })
   createdAt: Date;
 
-  @Column({ name: 'created_by', type: 'varchar', length: 255 })
-  createdBy: string;
+  @Column({ name: 'created_by', type: 'varchar', length: 255, nullable: true })
+  createdBy?: string;
 
   @UpdateDateColumn({
     name: 'updated_at',

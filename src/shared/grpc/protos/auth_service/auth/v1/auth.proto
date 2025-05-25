@@ -1,0 +1,12 @@
+syntax = "proto3";
+package auth.v1;
+
+import "google/protobuf/empty.proto";
+
+message SendVerificationCodeRequest {
+  string email = 1;
+}
+
+service AuthService {
+  rpc SendVerificationCode(SendVerificationCodeRequest) returns (google.protobuf.Empty);
+}

@@ -1,15 +1,46 @@
-import { ValidateNested } from 'class-validator';
-import { UserDto } from './user.dto';
-import { Type } from 'class-transformer';
+import {
+  IsBoolean,
+  IsEmail,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
-export class CreateUsersRequestDto {
-  @ValidateNested({ each: true })
-  @Type(() => UserDto)
-  users: UserDto[];
-}
+export class CreateUserRequestDto {
+  @IsOptional()
+  @MaxLength(255)
+  userName?: string;
 
-export class CreateUsersResponseDto {
-  ids: string[];
+  @IsEmail()
+  @IsOptional()
+  @MaxLength(255)
+  email?: string;
+
+  @IsString()
+  @MaxLength(50)
+  password: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  displayName?: string;
+
+  @IsPhoneNumber()
+  @IsOptional()
+  phoneNumber?: string;
+
+  @MaxLength(255)
+  @IsOptional()
+  createdBy?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isEmailVerified?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isPhoneNumberVerified?: boolean;
 }
 
 export class CreateUserResponseDto {

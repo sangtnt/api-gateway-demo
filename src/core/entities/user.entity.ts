@@ -3,11 +3,9 @@ import { BaseEntity } from '../../shared/interfaces/base.entity';
 export class UserEntity extends BaseEntity {
   email?: string;
 
-  password?: string;
+  password: string;
 
-  firstName?: string;
-
-  lastName?: string;
+  displayName?: string;
 
   phoneNumber?: string;
 

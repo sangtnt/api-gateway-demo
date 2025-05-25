@@ -1,67 +1,56 @@
 import { IUserRepository } from '@/core/repositories/user.repository';
 import { USER_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateUsersRequestDto, CreateUsersResponseDto } from '../dtos/create-user.dto';
+import { CreateUserRequestDto, CreateUserResponseDto } from '../dtos/create-user.dto';
 import { RpcException } from '@/core/exceptions/rpc.exception';
 import { status as RpcExceptionStatus } from '@grpc/grpc-js';
 import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
 import { hashString } from '@/shared/utils/hashing.util';
-import { UserDto } from '../dtos/user.dto';
 
 @Injectable()
-export class CreateUsersUseCase {
+export class CreateUserUseCase {
   constructor(
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(request: CreateUsersRequestDto): Promise<CreateUsersResponseDto> {
+  async execute(request: CreateUserRequestDto): Promise<CreateUserResponseDto> {
     this.validateCreateUserRequest(request);
 
-    const isAvailable = await this.userRepository.checkAvailableEmailsAndPhones(
-      request.users.map((user) => user.email?.trim()).filter((email) => typeof email === 'string'),
-      request.users
-        .map((user) => user.phoneNumber?.trim())
-        .filter((phone) => typeof phone === 'string'),
-    );
+    await this.processUserData(request);
 
-    if (isAvailable) {
+    const userExist = await this.userRepository.checkExistUser(request.email, request.phoneNumber);
+
+    if (userExist) {
       throw new RpcException({
         error: ErrorCodes.DATA_EXISTS,
         code: RpcExceptionStatus.ALREADY_EXISTS,
       });
     }
 
-    const processUserData = async (user: UserDto): Promise<void> => {
-      user.password = await hashString(user.password);
-      user.email = user.email?.trim()?.toLowerCase();
-    };
-
-    await Promise.all(
-      request.users
-        .map((user) => {
-          if (user.password?.trim()) {
-            return processUserData(user);
-          }
-          return undefined;
-        })
-        .filter((task) => task !== undefined),
-    );
-
-    return { ids: await this.userRepository.saveMany(request.users) };
+    return { id: await this.userRepository.save(request) };
   }
 
-  private validateCreateUserRequest(createUserDto: CreateUsersRequestDto): void {
-    const validateUserData = (user: UserDto): boolean => {
-      if (!user.email && !user.phoneNumber) {
-        return false;
-      }
-      return true;
-    };
+  private async processUserData(user: CreateUserRequestDto): Promise<void> {
+    user.password = await hashString(user.password);
+    user.email = user.email?.trim()?.toLowerCase();
+    user.phoneNumber = user.phoneNumber?.trim();
+    user.userName = user.userName?.trim()?.toLowerCase();
+    user.displayName = user.displayName?.trim();
 
-    const isInvalidUsers = createUserDto.users.some((user) => !validateUserData(user));
+    if (!user.userName) {
+      const random = Math.floor(Math.random() * 1000); // Random number (0–999)
+      const timestamp = Date.now(); // Milliseconds since epoch
+      user.userName = `user_${random}_${timestamp}`;
+    }
 
-    if (!createUserDto.users || createUserDto.users.length === 0 || isInvalidUsers) {
+    if (!user.displayName) {
+      user.displayName = user.userName;
+    }
+  }
+
+  private validateCreateUserRequest(request: CreateUserRequestDto): void {
+    if (!request.email && !request.phoneNumber) {
       throw new RpcException({
         error: ErrorCodes.BAD_REQ,
         code: RpcExceptionStatus.INVALID_ARGUMENT,
