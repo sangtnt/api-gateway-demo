@@ -5,7 +5,7 @@ import { LoggerModule } from './shared/logger/logger.module';
 import { getLoggerOptions } from './configs/logger.config';
 import appConfig from './configs/app.config';
 import authDatabaseConfig from './configs/auth-database.config';
-import { DatabaseModule } from './infra/databases/database.module';
+import { PostgresModule } from './infra/postgres/postgres.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { DatabaseModule } from './infra/databases/database.module';
     }),
     LoggerModule.forRoot(getLoggerOptions()),
     PresentationModule,
-    DatabaseModule,
+    PostgresModule,
   ],
 })
 export class AppModule {}

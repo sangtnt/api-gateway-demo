@@ -6,8 +6,8 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { UserSchema } from './typeorm/auth-db/entities/user.entity';
-import { UserRepository } from './typeorm/auth-db/repositories/user.repository';
+import { UserSchema } from './auth-db/entities/user.entity';
+import { UserRepository } from './auth-db/repositories/user.repository';
 
 @Module({
   imports: [
@@ -41,4 +41,4 @@ import { UserRepository } from './typeorm/auth-db/repositories/user.repository';
   ],
   exports: [USER_REPOSITORY_TOKEN],
 })
-export class DatabaseModule {}
+export class PostgresModule {}

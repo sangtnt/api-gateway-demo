@@ -14,6 +14,6 @@ export const AppDataSource = new DataSource({
   logging: process.env.AUTH_DB_LOGGING === 'true',
   migrationsRun: false,
   migrationsTableName: 'migrations',
-  migrations: [join(__dirname, '..', 'infra/databases/typeorm/auth-db/migrations/*{.ts,.js}')],
-  entities: [join(__dirname, '..', 'infra/databases/typeorm/auth-db/entities/*{.ts,.js}')],
+  migrations: [join(__dirname, '..', 'infra/postgres/auth-db/migrations/*{.ts,.js}')],
+  entities: [join(__dirname, '..', 'infra/postgres/auth-db/entities/*{.ts,.js}')],
 });

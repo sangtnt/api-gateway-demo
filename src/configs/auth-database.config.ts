@@ -10,7 +10,7 @@ export const authDatabaseConfigOptions = (configService: ConfigService): DataSou
   const configs = configService.get(authDatabaseConfig) as DataSourceOptions;
   return {
     ...configs,
-    entities: [join(__dirname, '..', 'infra/databases/typeorm/auth-db/entities/*{.ts,.js}')],
+    entities: [join(__dirname, '..', 'infra/postgres/auth-db/entities/*{.ts,.js}')],
     logger: new DatabaseLoggerService(),
   };
 };
