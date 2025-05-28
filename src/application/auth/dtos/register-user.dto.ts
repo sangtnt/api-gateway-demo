@@ -1,5 +1,4 @@
-import { Optional } from '@nestjs/common';
-import { IsString, MaxLength } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class RegisterUserRequestDto {
   @MaxLength(255)
@@ -14,6 +13,6 @@ export class RegisterUserRequestDto {
 
   @IsString()
   @MaxLength(255)
-  @Optional()
+  @IsOptional()
   displayName?: string;
 }

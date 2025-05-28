@@ -27,5 +27,11 @@ export default registerAs(
     schema: process.env.AUTH_DB_SCHEMA,
     synchronize: false,
     logging: process.env.AUTH_DB_LOGGING === 'true',
+    extra: {
+      poolSize: 20,
+      connectionTimeoutMillis: 2000,
+      query_timeout: 1000,
+      statement_timeout: 1000,
+    },
   }),
 );

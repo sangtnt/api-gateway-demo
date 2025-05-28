@@ -17,6 +17,9 @@ import { GrpcRequestLoggingInterceptor } from './shared/logger/interceptors/grpc
 import { ClsService } from 'nestjs-cls';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { grpcOptions } from './configs/grpc.config';
+import { TimeoutInterceptor } from './shared/interceptors/time-out.interceptor';
+import { ConfigService } from '@nestjs/config';
+import { AppConfig } from './configs/app.config';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -53,7 +56,13 @@ function configure(app: INestApplication): void {
     new CatchValidationFilter(),
   );
   app.useLogger(app.get(AppLogger));
-  app.useGlobalInterceptors(new GrpcRequestLoggingInterceptor(cls, reflector));
+  app.useGlobalInterceptors(
+    new GrpcRequestLoggingInterceptor(cls, reflector),
+    new TimeoutInterceptor(
+      reflector,
+      app.get(ConfigService).get<AppConfig>('appConfig')?.timeout || 30000,
+    ),
+  );
 
   app.enableShutdownHooks(
     Object.values(ShutdownSignal).filter((x) => x !== ShutdownSignal.SIGUSR2),

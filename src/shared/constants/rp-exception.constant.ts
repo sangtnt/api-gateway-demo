@@ -11,6 +11,12 @@ export const ErrorCodes = {
     logLevel: LogLevel.ERROR,
   },
 
+  TIME_OUT: {
+    code: 'AUTH-BE-TIME_OUT',
+    message: 'Time out',
+    logLevel: LogLevel.ERROR,
+  },
+
   DATA_NOT_FOUND: {
     code: 'AUTH-BE-DATA_NOT_FOUND',
     message: 'Data not found',
@@ -26,6 +32,12 @@ export const ErrorCodes = {
   DATA_EXISTS: {
     code: 'AUTH-BE-DATA_EXIST',
     message: 'Data already exists',
+    logLevel: LogLevel.ERROR,
+  },
+
+  INTERNAL_SERVER_ERROR: {
+    code: 'AUTH-BE-INTERNAL_SERVER_ERROR',
+    message: 'Internal server error',
     logLevel: LogLevel.ERROR,
   },
 };
