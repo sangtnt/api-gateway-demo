@@ -3,7 +3,7 @@ import { IUserRepository } from '@/core/repositories/user.repository';
 import { AbstractRepository } from '../../base/base.repository';
 
 export class UserRepository extends AbstractRepository<UserSchema> implements IUserRepository {
-  checkExistUser(email: string | undefined, phoneNumber: string | undefined): Promise<boolean> {
+  checkExistUser(email?: string, phoneNumber?: string): Promise<boolean> {
     const conditions: Record<string, string>[] = [];
 
     if (email) {

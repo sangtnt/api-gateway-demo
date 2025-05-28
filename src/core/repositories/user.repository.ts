@@ -7,5 +7,5 @@ export interface IUserRepository extends IRepository<UserEntity> {
    * @param user The user to check.
    * @returns A promise that resolves to true if the user is available, false otherwise.
    */
-  checkExistUser(email: string | undefined, phoneNumber: string | undefined): Promise<boolean>;
+  checkExistUser(email?: string, phoneNumber?: string): Promise<boolean>;
 }
