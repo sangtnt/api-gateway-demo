@@ -17,6 +17,12 @@ export const ErrorCodes = {
     logLevel: LogLevel.ERROR,
   },
 
+  TOKEN_EXPIRED: {
+    code: 'AUTH-BE-TOKEN_EXPIRED',
+    message: 'Token expired',
+    logLevel: LogLevel.ERROR,
+  },
+
   DATA_NOT_FOUND: {
     code: 'AUTH-BE-DATA_NOT_FOUND',
     message: 'Data not found',

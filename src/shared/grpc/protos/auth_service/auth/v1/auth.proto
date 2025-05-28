@@ -26,8 +26,13 @@ message LoginResponse {
   user.v1.UserInfo user_info = 3;
 }
 
+message VerifyAccessTokenRequest {
+  string access_token = 1;
+}
+
 service AuthService {
   rpc SendVerificationCode(SendVerificationCodeRequest) returns (google.protobuf.Empty);
   rpc Register(RegisterRequest) returns (google.protobuf.Empty);
   rpc Login(LoginRequest) returns (LoginResponse);
+  rpc VerifyAccessToken(VerifyAccessTokenRequest) returns (google.protobuf.Empty);
 }

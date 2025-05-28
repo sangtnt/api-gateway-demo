@@ -13,6 +13,7 @@ import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
 import { status as RpcExceptionStatus } from '@grpc/grpc-js';
 import { TokenService } from './services/token.service';
 import { LoginUseCase } from './usecases/login.usecase';
+import { VerifyAccessTokenUseCase } from './usecases/verify-access-token.usecase';
 
 @Module({
   imports: [
@@ -36,7 +37,19 @@ import { LoginUseCase } from './usecases/login.usecase';
       inject: [ConfigService],
     }),
   ],
-  providers: [SendEmailVerificationUseCase, RegisterUserUseCase, TokenService, LoginUseCase],
-  exports: [SendEmailVerificationUseCase, RegisterUserUseCase, TokenService, LoginUseCase],
+  providers: [
+    SendEmailVerificationUseCase,
+    RegisterUserUseCase,
+    TokenService,
+    LoginUseCase,
+    VerifyAccessTokenUseCase,
+  ],
+  exports: [
+    SendEmailVerificationUseCase,
+    RegisterUserUseCase,
+    TokenService,
+    LoginUseCase,
+    VerifyAccessTokenUseCase,
+  ],
 })
 export class AuthModule {}

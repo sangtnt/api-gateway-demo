@@ -1,16 +1,21 @@
 import { JwtService } from '@nestjs/jwt';
 import { uuidv7 } from 'uuidv7';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserEntity } from '@/core/entities/user.entity';
 import { plainToInstance } from 'class-transformer';
 import {
   AccessTokenExpiresMinute,
   RefreshTokenExpiresMinute,
 } from '@/shared/constants/config.constants';
+import { ConfigService } from '@nestjs/config';
+import { EnvironmentVariables } from '@/shared/constants/env.constant';
 
 @Injectable()
 export class TokenService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    @Inject(ConfigService) private readonly configService: ConfigService,
+  ) {}
   async generateAccessToken(payload: UserEntity): Promise<string> {
     return this.jwtService.signAsync(
       {
@@ -41,5 +46,11 @@ export class TokenService {
         expiresIn: `${RefreshTokenExpiresMinute}m`,
       },
     );
+  }
+
+  async verifyAccessToken(token: string): Promise<void> {
+    await this.jwtService.verifyAsync(token, {
+      secret: this.configService.get<string>(EnvironmentVariables.JWT_SECRET),
+    });
   }
 }
