@@ -40,4 +40,10 @@ export const ErrorCodes = {
     message: 'Internal server error',
     logLevel: LogLevel.ERROR,
   },
+
+  UNAUTHENTICATED: {
+    code: 'AUTH-BE-UNAUTHENTICATED',
+    message: 'unauthenticated',
+    logLevel: LogLevel.ERROR,
+  },
 };

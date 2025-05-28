@@ -5,8 +5,8 @@ import { join } from 'path';
 export const grpcOptions: GrpcOptions = {
   transport: Transport.GRPC,
   options: {
-    package: ['auth.v1'],
-    protoPath: ['auth/v1/auth.proto'],
+    package: ['auth.v1', 'user.v1'],
+    protoPath: ['auth/v1/auth.proto', 'user/v1/user.proto'],
     url: `${process.env.HOST}:${process.env.GRPC_PORT}`,
     loader: {
       keepCase: false,

@@ -20,4 +20,8 @@ export class UserRepository extends AbstractRepository<UserSchema> implements IU
 
     return this.repository.existsBy(conditions);
   }
+
+  findUser(email?: string, phoneNumber?: string): Promise<UserSchema | null> {
+    return this.repository.findOneBy({ email, phoneNumber });
+  }
 }

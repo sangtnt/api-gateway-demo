@@ -10,8 +10,8 @@ import { IVerificationCodeRepository } from '@/core/repositories/verification-co
 import { VerificationCodeExpiresMinute } from '@/shared/constants/config.constants';
 import { IUserRepository } from '@/core/repositories/user.repository';
 import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
-import { RpcException } from '@nestjs/microservices';
 import { status as RpcExceptionStatus } from '@grpc/grpc-js';
+import { RpcException } from '@/core/exceptions/rpc.exception';
 
 @Injectable()
 export class SendEmailVerificationUseCase {

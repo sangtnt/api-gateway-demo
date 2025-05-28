@@ -6,6 +6,7 @@ import { RpcException } from '@/core/exceptions/rpc.exception';
 import { status as RpcExceptionStatus } from '@grpc/grpc-js';
 import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
 import * as bcrypt from 'bcrypt';
+import { isStrongPassword } from 'class-validator';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -50,7 +51,15 @@ export class CreateUserUseCase {
   }
 
   private validateCreateUserRequest(request: CreateUserRequestDto): void {
-    if (!request.email && !request.phoneNumber) {
+    const isValidPassword = isStrongPassword(request.password, {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    });
+
+    if ((!request.email && !request.phoneNumber) || !isValidPassword) {
       throw new RpcException({
         error: ErrorCodes.BAD_REQ,
         code: RpcExceptionStatus.INVALID_ARGUMENT,

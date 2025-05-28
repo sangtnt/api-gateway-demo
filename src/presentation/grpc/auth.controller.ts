@@ -1,5 +1,7 @@
+import { LoginRequestDto, LoginResponseDto } from '@/application/auth/dtos/login.dto';
 import { RegisterUserRequestDto } from '@/application/auth/dtos/register-user.dto';
 import { SendEmailVerificationRequestDto } from '@/application/auth/dtos/send-email-verification.dto';
+import { LoginUseCase } from '@/application/auth/usecases/login.usecase';
 import { RegisterUserUseCase } from '@/application/auth/usecases/register-user.usecase';
 import { SendEmailVerificationUseCase } from '@/application/auth/usecases/send-email-verification.usecase';
 import { Timeout } from '@/shared/decorators/time-out.decorator';
@@ -12,6 +14,8 @@ export class AuthController {
     private readonly sendEmailVerificationUseCase: SendEmailVerificationUseCase,
     @Inject(RegisterUserUseCase)
     private readonly registerUserUseCase: RegisterUserUseCase,
+    @Inject(LoginUseCase)
+    private readonly loginUseCase: LoginUseCase,
   ) {}
 
   @Timeout(10000) // 10 seconds timeout
@@ -23,5 +27,10 @@ export class AuthController {
   @GrpcMethod('AuthService', 'Register')
   async registerUser(request: RegisterUserRequestDto): Promise<void> {
     await this.registerUserUseCase.execute(request);
+  }
+
+  @GrpcMethod('AuthService', 'Login')
+  loginUser(request: LoginRequestDto): Promise<LoginResponseDto> {
+    return this.loginUseCase.execute(request);
   }
 }

@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+
 export abstract class BaseEntity {
   id: string;
 
@@ -9,5 +11,6 @@ export abstract class BaseEntity {
 
   updatedBy: string;
 
+  @Exclude()
   version: number;
 }

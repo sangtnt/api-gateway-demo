@@ -58,10 +58,6 @@ export class RegisterUserUseCase {
       });
     }
 
-    await this.verificationCodeRepository.deleteVerificationCode(
-      emailOrPhoneNumber.trim()?.toLowerCase(),
-    );
-
     const isValidEmail = isEmail(emailOrPhoneNumber.trim());
     const isValidPhoneNumber = isPhoneNumber(emailOrPhoneNumber.trim());
 
@@ -82,6 +78,12 @@ export class RegisterUserUseCase {
       });
     }
 
-    return await this.createUserUseCase.execute(createUserReq);
+    const result = await this.createUserUseCase.execute(createUserReq);
+
+    await this.verificationCodeRepository.deleteVerificationCode(
+      emailOrPhoneNumber.trim()?.toLowerCase(),
+    );
+
+    return result;
   }
 }
