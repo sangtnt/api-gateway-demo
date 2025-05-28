@@ -5,7 +5,7 @@ import { CreateUserRequestDto, CreateUserResponseDto } from '../dtos/create-user
 import { RpcException } from '@/core/exceptions/rpc.exception';
 import { status as RpcExceptionStatus } from '@grpc/grpc-js';
 import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
-import { hashString } from '@/shared/utils/hashing.util';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -32,7 +32,7 @@ export class CreateUserUseCase {
   }
 
   private async processUserData(user: CreateUserRequestDto): Promise<void> {
-    user.password = await hashString(user.password);
+    user.password = await bcrypt.hash(user.password, 10); // Hash the password with 10 rounds
     user.email = user.email?.trim()?.toLowerCase();
     user.phoneNumber = user.phoneNumber?.trim();
     user.userName = user.userName?.trim()?.toLowerCase();
@@ -41,7 +41,7 @@ export class CreateUserUseCase {
     if (!user.userName) {
       const random = Math.floor(Math.random() * 1000); // Random number (0–999)
       const timestamp = Date.now(); // Milliseconds since epoch
-      user.userName = `user_${random}_${timestamp}`;
+      user.userName = `user_${random}${timestamp}`;
     }
 
     if (!user.displayName) {

@@ -1,5 +1,8 @@
+import { VerificationCodeEntity } from '../entities/verification-code.entity';
+
 export interface IVerificationCodeRepository {
-  saveVerificationCode(id: string, code: string, expMin: number): Promise<void>;
-  getVerificationCode(id: string): Promise<string | null>;
+  saveVerificationCode(entity: VerificationCodeEntity): Promise<void>;
+  getVerificationCode(id: string): Promise<VerificationCodeEntity | null>;
   deleteVerificationCode(id: string): Promise<void>;
+  updateVerificationCodeAttempts(id: string, attempts: number): Promise<void>;
 }

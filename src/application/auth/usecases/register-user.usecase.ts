@@ -30,22 +30,37 @@ export class RegisterUserUseCase {
       });
     }
 
-    const existingCode = await this.verificationCodeRepository.getVerificationCode(
+    const foundCode = await this.verificationCodeRepository.getVerificationCode(
       emailOrPhoneNumber.trim()?.toLowerCase(),
     );
 
-    if (!existingCode || existingCode !== verificationCode.trim()) {
+    if (!foundCode) {
       throw new RpcException({
         error: ErrorCodes.INVALID_VERIFICATION_CODE,
         code: RpcExceptionStatus.UNAUTHENTICATED,
       });
     }
 
-    if (existingCode) {
-      await this.verificationCodeRepository.deleteVerificationCode(
-        emailOrPhoneNumber.trim()?.toLowerCase(),
-      );
+    if (foundCode.code !== verificationCode.trim()) {
+      if (foundCode.attempts === 0) {
+        await this.verificationCodeRepository.deleteVerificationCode(
+          emailOrPhoneNumber.trim()?.toLowerCase(),
+        );
+      } else {
+        await this.verificationCodeRepository.updateVerificationCodeAttempts(
+          emailOrPhoneNumber.trim()?.toLowerCase(),
+          foundCode.attempts - 1,
+        );
+      }
+      throw new RpcException({
+        error: ErrorCodes.INVALID_VERIFICATION_CODE,
+        code: RpcExceptionStatus.UNAUTHENTICATED,
+      });
     }
+
+    await this.verificationCodeRepository.deleteVerificationCode(
+      emailOrPhoneNumber.trim()?.toLowerCase(),
+    );
 
     const isValidEmail = isEmail(emailOrPhoneNumber.trim());
     const isValidPhoneNumber = isPhoneNumber(emailOrPhoneNumber.trim());
