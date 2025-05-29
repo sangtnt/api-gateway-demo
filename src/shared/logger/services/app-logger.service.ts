@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Inject, Injectable, LoggerService } from '@nestjs/common';
 import { CUSTOM_LOGGER_OPTION, CustomLoggerOptions } from '../model/logger.option';

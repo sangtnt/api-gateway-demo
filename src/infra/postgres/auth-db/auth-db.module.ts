@@ -1,10 +1,10 @@
-import { authDatabaseConfigOptions } from '@/configs/auth-database.config';
 import { USER_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { UserRepository } from './repositories/user.repository';
 import { DataSource } from 'typeorm';
 import { UserSchema } from './entities/user.entity';
-import { UserRepository } from './repositories/user.repository';
+import { authDatabaseConfigOptions } from '@/configs/auth-database.config';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   providers: [

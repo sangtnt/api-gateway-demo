@@ -1,10 +1,10 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class Migrations1748431334765 implements MigrationInterface {
-    name = 'Migrations1748431334765'
+  name = 'Migrations1748431334765';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             CREATE TABLE "auth_service"."users" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
@@ -28,30 +28,29 @@ export class Migrations1748431334765 implements MigrationInterface {
                 CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id")
             )
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "IDX_074a1f262efaca6aba16f7ed92" ON "auth_service"."users" ("user_name")
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "IDX_97672ac88f789774dd47f7c8be" ON "auth_service"."users" ("email")
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             CREATE INDEX "IDX_17d1817f241f10a3dbafb169fd" ON "auth_service"."users" ("phone_number")
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             DROP INDEX "auth_service"."IDX_17d1817f241f10a3dbafb169fd"
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             DROP INDEX "auth_service"."IDX_97672ac88f789774dd47f7c8be"
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             DROP INDEX "auth_service"."IDX_074a1f262efaca6aba16f7ed92"
         `);
-        await queryRunner.query(`
+    await queryRunner.query(`
             DROP TABLE "auth_service"."users"
         `);
-    }
-
+  }
 }

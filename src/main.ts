@@ -46,7 +46,6 @@ async function startEvent(app: INestApplication): Promise<void> {
 }
 
 function configure(app: INestApplication): void {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const cls = app.get(ClsService);
   const reflector = app.get(Reflector);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
