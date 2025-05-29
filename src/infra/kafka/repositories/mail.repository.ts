@@ -1,5 +1,6 @@
 import { MailEntity } from '@/core/entities/mail.entity';
 import { IMailRepository } from '@/core/repositories/mail.repository';
+import { KAFKA_CLIENT_SERVICE } from '@/shared/constants/constants';
 import { EnvironmentVariables } from '@/shared/constants/env.constant';
 import { Logger } from '@/shared/logger/services/app-logger.service';
 import { Inject, OnApplicationShutdown, OnModuleInit } from '@nestjs/common';
@@ -9,7 +10,7 @@ import { lastValueFrom } from 'rxjs';
 
 export class MailRepository implements OnModuleInit, OnApplicationShutdown, IMailRepository {
   constructor(
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
+    @Inject(KAFKA_CLIENT_SERVICE) private readonly kafkaClient: ClientKafka,
     private logger: Logger,
     @Inject(ConfigService) private readonly configService: ConfigService,
   ) {}

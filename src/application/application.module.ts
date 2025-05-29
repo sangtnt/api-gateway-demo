@@ -1,7 +1,4 @@
 import { Module } from '@nestjs/common';
-import { KafkaModule } from '@/infra/kafka/kafka.module';
-import { AuthDbModule } from '@/infra/postgres/auth-db/auth-db.module';
-import { RedisModule } from '@/infra/redis/redis.module';
 import { EnvironmentVariables } from '@/shared/constants/env.constant';
 import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
 import { ConfigService } from '@nestjs/config';
@@ -15,12 +12,11 @@ import { LoginUseCase } from './auth/usecases/login.usecase';
 import { RegisterUserUseCase } from './auth/usecases/register-user.usecase';
 import { SendEmailVerificationUseCase } from './auth/usecases/send-email-verification.usecase';
 import { VerifyAccessTokenUseCase } from './auth/usecases/verify-access-token.usecase';
+import { InfraModule } from '@/infra/infra.module';
 
 @Module({
   imports: [
-    KafkaModule,
-    RedisModule,
-    AuthDbModule,
+    InfraModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
         const secret = configService.get<string>(EnvironmentVariables.JWT_SECRET);
