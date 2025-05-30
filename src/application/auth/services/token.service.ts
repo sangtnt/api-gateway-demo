@@ -8,7 +8,6 @@ import {
   RefreshTokenExpiresMinute,
 } from '@/shared/constants/config.constants';
 import { ConfigService } from '@nestjs/config';
-import { EnvironmentVariables } from '@/shared/constants/env.constant';
 
 @Injectable()
 export class TokenService {
@@ -49,8 +48,6 @@ export class TokenService {
   }
 
   async verifyAccessToken(token: string): Promise<void> {
-    await this.jwtService.verifyAsync(token, {
-      secret: this.configService.get<string>(EnvironmentVariables.JWT_SECRET),
-    });
+    await this.jwtService.verifyAsync(token);
   }
 }

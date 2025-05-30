@@ -1,10 +1,5 @@
 import { Module } from '@nestjs/common';
-import { EnvironmentVariables } from '@/shared/constants/env.constant';
-import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
-import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { RpcException } from '@nestjs/microservices';
-import { status as RpcExceptionStatus } from '@grpc/grpc-js';
 import { FindUserUseCase } from './user/usecases/find-user.usecase';
 import { CreateUserUseCase } from './user/usecases/create-users.usecase';
 import { TokenService } from './auth/services/token.service';
@@ -13,24 +8,23 @@ import { RegisterUserUseCase } from './auth/usecases/register-user.usecase';
 import { SendEmailVerificationUseCase } from './auth/usecases/send-email-verification.usecase';
 import { VerifyAccessTokenUseCase } from './auth/usecases/verify-access-token.usecase';
 import { InfraModule } from '@/infra/infra.module';
+import { readFile } from '@/shared/utils/file.util';
 
 @Module({
   imports: [
     InfraModule,
     JwtModule.registerAsync({
-      useFactory: (configService: ConfigService) => {
-        const secret = configService.get<string>(EnvironmentVariables.JWT_SECRET);
-        if (!secret?.trim()) {
-          throw new RpcException({
-            error: ErrorCodes.INTERNAL_SERVER_ERROR,
-            code: RpcExceptionStatus.INTERNAL,
-          });
-        }
+      useFactory: () => {
+        const PRIVATE_KEY = readFile('keys/private_key.pem');
+        const PUBLIC_KEY = readFile('keys/public_key.pem');
         return {
-          secret,
+          privateKey: PRIVATE_KEY,
+          publicKey: PUBLIC_KEY,
+          signOptions: {
+            algorithm: 'RS256',
+          },
         };
       },
-      inject: [ConfigService],
     }),
   ],
   providers: [
