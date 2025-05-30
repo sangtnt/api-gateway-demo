@@ -9,6 +9,7 @@ import { SendEmailVerificationUseCase } from './auth/usecases/send-email-verific
 import { VerifyAccessTokenUseCase } from './auth/usecases/verify-access-token.usecase';
 import { InfraModule } from '@/infra/infra.module';
 import { readFile } from '@/shared/utils/file.util';
+import { RenewAccessTokenUseCase } from './auth/usecases/renew-access-token.usecase';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { readFile } from '@/shared/utils/file.util';
     TokenService,
     LoginUseCase,
     VerifyAccessTokenUseCase,
+    RenewAccessTokenUseCase,
   ],
   exports: [
     CreateUserUseCase,
@@ -44,6 +46,7 @@ import { readFile } from '@/shared/utils/file.util';
     TokenService,
     LoginUseCase,
     VerifyAccessTokenUseCase,
+    RenewAccessTokenUseCase,
   ],
 })
 export class ApplicationModule {}

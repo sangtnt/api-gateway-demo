@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { BaseEntity } from '../../shared/interfaces/base.entity';
+import { BaseEntity } from './base.entity';
 
 export class UserEntity extends BaseEntity {
   email?: string;
@@ -18,9 +18,4 @@ export class UserEntity extends BaseEntity {
   isEmailVerified: boolean;
 
   isPhoneNumberVerified: boolean;
-
-  lastLoginAt?: Date;
-
-  @Exclude()
-  currentHashedRefreshToken?: string;
 }

@@ -1,4 +1,4 @@
-import { BaseEntity } from '@/shared/interfaces/base.entity';
+import { BaseEntity } from '@/core/entities/base.entity';
 import { IFindAllOptions } from '@/shared/interfaces/find-all-options';
 
 /**

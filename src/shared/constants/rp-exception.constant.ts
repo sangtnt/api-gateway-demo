@@ -35,6 +35,12 @@ export const ErrorCodes = {
     logLevel: LogLevel.ERROR,
   },
 
+  INVALID_TOKEN: {
+    code: 'AUTH-BE-INVALID_TOKEN',
+    message: 'Invalid token',
+    logLevel: LogLevel.ERROR,
+  },
+
   DATA_EXISTS: {
     code: 'AUTH-BE-DATA_EXIST',
     message: 'Data already exists',

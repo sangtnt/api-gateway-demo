@@ -4,6 +4,7 @@ import { AUTH_DATA_SOURCE, KAFKA_CLIENT_SERVICE } from '@/shared/constants/const
 import { EnvironmentVariables } from '@/shared/constants/env.constant';
 import {
   MAIL_REPOSITORY_TOKEN,
+  REFRESH_TOKEN_REPOSITORY_TOKEN,
   USER_REPOSITORY_TOKEN,
   VERIFICATION_CODE_REPOSITORY_TOKEN,
 } from '@/shared/constants/repository-tokens.constant';
@@ -17,6 +18,8 @@ import { UserRepository } from './postgres/auth-db/repositories/user.repository'
 import { VerificationCodeRepository } from './redis/repositories/verification-code.repository';
 import { ClientProviderOptions, ClientsModule, Transport } from '@nestjs/microservices';
 import { MailRepository } from './kafka/repositories/mail.repository';
+import { RefreshTokenSchema } from './postgres/auth-db/entities/refresh-token.entity';
+import { RefreshTokenRepository } from './postgres/auth-db/repositories/refresh-token.repository';
 
 @Module({
   imports: [
@@ -86,6 +89,12 @@ import { MailRepository } from './kafka/repositories/mail.repository';
       inject: [AUTH_DATA_SOURCE],
     },
     {
+      provide: REFRESH_TOKEN_REPOSITORY_TOKEN,
+      useFactory: (dataSource: DataSource): RefreshTokenRepository =>
+        new RefreshTokenRepository(dataSource.getRepository(RefreshTokenSchema)),
+      inject: [AUTH_DATA_SOURCE],
+    },
+    {
       provide: VERIFICATION_CODE_REPOSITORY_TOKEN,
       useClass: VerificationCodeRepository,
     },
@@ -94,6 +103,11 @@ import { MailRepository } from './kafka/repositories/mail.repository';
       useClass: MailRepository,
     },
   ],
-  exports: [USER_REPOSITORY_TOKEN, VERIFICATION_CODE_REPOSITORY_TOKEN, MAIL_REPOSITORY_TOKEN],
+  exports: [
+    USER_REPOSITORY_TOKEN,
+    VERIFICATION_CODE_REPOSITORY_TOKEN,
+    MAIL_REPOSITORY_TOKEN,
+    REFRESH_TOKEN_REPOSITORY_TOKEN,
+  ],
 })
 export class InfraModule {}

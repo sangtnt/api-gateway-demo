@@ -5,16 +5,19 @@ import { RpcException } from '@/core/exceptions/rpc.exception';
 import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
 import { status as RpcExceptionStatus } from '@grpc/grpc-js';
 import { Inject, Injectable } from '@nestjs/common';
-import { USER_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
-import { IUserRepository } from '@/core/repositories/user.repository';
+import { REFRESH_TOKEN_REPOSITORY_TOKEN } from '@/shared/constants/repository-tokens.constant';
 import * as bcrypt from 'bcrypt';
+import { uuidv7 } from 'uuidv7';
+import { IRefreshTokenRepository } from '@/core/repositories/refresh-token.repository';
+import { RefreshTokenExpiresMinute } from '@/shared/constants/config.constants';
 
 @Injectable()
 export class LoginUseCase {
   constructor(
     private readonly tokenService: TokenService,
     private findUserUseCase: FindUserUseCase,
-    @Inject(USER_REPOSITORY_TOKEN) private readonly userRepository: IUserRepository,
+    @Inject(REFRESH_TOKEN_REPOSITORY_TOKEN)
+    private readonly rfTokenRepository: IRefreshTokenRepository,
   ) {}
 
   async execute(request: LoginRequestDto): Promise<LoginResponseDto> {
@@ -36,17 +39,18 @@ export class LoginUseCase {
       });
     }
 
-    const refreshToken = await this.tokenService.generateRefreshToken(foundUser);
+    const refreshToken = this.tokenService.generateRefreshToken();
+    const accessToken = await this.tokenService.generateAccessToken(foundUser);
 
-    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.userRepository.save({
-      ...foundUser,
-      currentHashedRefreshToken,
-      lastLoginAt: new Date(),
+    await this.rfTokenRepository.save({
+      userId: foundUser.id,
+      token: this.tokenService.hashToken(refreshToken),
+      expiresAt: new Date(Date.now() + RefreshTokenExpiresMinute * 60 * 1000),
+      familyId: uuidv7(),
     });
 
     return {
-      accessToken: await this.tokenService.generateAccessToken(foundUser),
+      accessToken,
       refreshToken,
       userInfo: foundUser,
     };

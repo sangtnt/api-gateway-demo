@@ -1,8 +1,9 @@
 import { Entity, Column, Index } from 'typeorm';
 import { BaseSchema } from '../../base/base.entity';
+import { UserEntity } from '@/core/entities/user.entity';
 
 @Entity({ name: 'users' })
-export class UserSchema extends BaseSchema {
+export class UserSchema extends BaseSchema implements UserEntity {
   @Column({ name: 'user_name', type: 'varchar', length: 255, unique: true })
   @Index()
   userName: string;
@@ -33,20 +34,4 @@ export class UserSchema extends BaseSchema {
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean;
-
-  @Column({
-    name: 'last_login_at',
-    type: 'timestamp with time zone',
-    nullable: true,
-  })
-  lastLoginAt?: Date;
-
-  @Column({
-    name: 'current_hashed_refresh_token',
-    type: 'varchar',
-    length: 512,
-    nullable: true,
-    select: false,
-  })
-  currentHashedRefreshToken?: string;
 }

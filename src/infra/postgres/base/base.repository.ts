@@ -4,7 +4,7 @@ import { ErrorCodes } from '@/shared/constants/rp-exception.constant';
 import { IFindAllOptions } from '@/shared/interfaces/find-all-options';
 import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { status as GrpcStatus } from '@grpc/grpc-js';
-import { BaseEntity } from '@/shared/interfaces/base.entity';
+import { BaseEntity } from '@/core/entities/base.entity';
 
 export abstract class AbstractRepository<TEntity extends BaseEntity>
   implements IRepository<TEntity>

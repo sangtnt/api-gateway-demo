@@ -30,9 +30,20 @@ message VerifyAccessTokenRequest {
   string access_token = 1;
 }
 
+message RefreshAccessTokenRequest {
+  string token = 1;
+  string user_id = 2;
+}
+
+message RefreshAccessTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
 service AuthService {
   rpc SendVerificationCode(SendVerificationCodeRequest) returns (google.protobuf.Empty);
   rpc Register(RegisterRequest) returns (google.protobuf.Empty);
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc VerifyAccessToken(VerifyAccessTokenRequest) returns (google.protobuf.Empty);
+  rpc RefreshAccessToken(RefreshAccessTokenRequest) returns (RefreshAccessTokenResponse);
 }

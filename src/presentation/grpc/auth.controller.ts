@@ -1,9 +1,14 @@
 import { LoginRequestDto, LoginResponseDto } from '@/application/auth/dtos/login.dto';
 import { RegisterUserRequestDto } from '@/application/auth/dtos/register-user.dto';
+import {
+  RenewAccessTokenRequestDto,
+  RenewAccessTokenResponseDto,
+} from '@/application/auth/dtos/renew-access-token.dto';
 import { SendEmailVerificationRequestDto } from '@/application/auth/dtos/send-email-verification.dto';
 import { VerifyAccessTokenRequestDto } from '@/application/auth/dtos/verify-access-token.dto';
 import { LoginUseCase } from '@/application/auth/usecases/login.usecase';
 import { RegisterUserUseCase } from '@/application/auth/usecases/register-user.usecase';
+import { RenewAccessTokenUseCase } from '@/application/auth/usecases/renew-access-token.usecase';
 import { SendEmailVerificationUseCase } from '@/application/auth/usecases/send-email-verification.usecase';
 import { VerifyAccessTokenUseCase } from '@/application/auth/usecases/verify-access-token.usecase';
 import { Timeout } from '@/shared/decorators/time-out.decorator';
@@ -20,6 +25,8 @@ export class AuthController {
     private readonly loginUseCase: LoginUseCase,
     @Inject(VerifyAccessTokenUseCase)
     private readonly verifyAccessTokenUseCase: VerifyAccessTokenUseCase,
+    @Inject(RenewAccessTokenUseCase)
+    private readonly renewAccessTokenUseCase: RenewAccessTokenUseCase,
   ) {}
 
   @Timeout(10000) // 10 seconds timeout
@@ -41,5 +48,12 @@ export class AuthController {
   @GrpcMethod('AuthService', 'VerifyAccessToken')
   async verifyAccessToken(request: VerifyAccessTokenRequestDto): Promise<void> {
     await this.verifyAccessTokenUseCase.execute(request.accessToken);
+  }
+
+  @GrpcMethod('AuthService', 'RefreshAccessToken')
+  async refreshAccessToken(
+    request: RenewAccessTokenRequestDto,
+  ): Promise<RenewAccessTokenResponseDto> {
+    return this.renewAccessTokenUseCase.execute(request);
   }
 }

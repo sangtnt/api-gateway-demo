@@ -7,7 +7,7 @@ export abstract class BaseEntity {
 
   createdBy?: string;
 
-  updatedAt: Date;
+  updatedAt?: Date;
 
   updatedBy: string;
 

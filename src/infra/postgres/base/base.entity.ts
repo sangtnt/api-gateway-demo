@@ -1,4 +1,4 @@
-import { BaseEntity } from '@/shared/interfaces/base.entity';
+import { BaseEntity } from '@/core/entities/base.entity';
 import {
   Column,
   CreateDateColumn,
@@ -24,10 +24,10 @@ export abstract class BaseSchema implements BaseEntity {
   @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
+    nullable: true,
   })
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @Column({ name: 'updated_by', type: 'varchar', length: 255, nullable: true })
   updatedBy: string;
