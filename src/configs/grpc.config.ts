@@ -1,6 +1,8 @@
+import { ServerCredentials } from '@grpc/grpc-js';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import 'dotenv/config';
 import { join } from 'path';
+import { readFile } from '@/shared/utils/file.util';
 
 export const grpcOptions: GrpcOptions = {
   transport: Transport.GRPC,
@@ -17,5 +19,18 @@ export const grpcOptions: GrpcOptions = {
       keepaliveTimeoutMs: 5 * 1000,
       keepalivePermitWithoutCalls: 1,
     },
+    credentials:
+      process.env.NODE_ENV !== 'local'
+        ? ServerCredentials.createSsl(
+            readFile('ssl/ca.crt'),
+            [
+              {
+                private_key: readFile('ssl/server.key'),
+                cert_chain: readFile('ssl/server.crt'),
+              },
+            ],
+            true,
+          )
+        : undefined,
   },
 };
