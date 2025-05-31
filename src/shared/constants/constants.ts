@@ -8,5 +8,4 @@ export enum Environment {
   Provision = 'provision',
 }
 
-export const AUTH_DATA_SOURCE = 'AUTH_DATA_SOURCE';
 export const KAFKA_CLIENT_SERVICE = 'KAFKA_CLIENT_SERVICE';

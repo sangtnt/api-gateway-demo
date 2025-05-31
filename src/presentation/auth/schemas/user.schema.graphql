@@ -1,0 +1,14 @@
+type User {
+    id: ID!
+    email: String
+    userName: String!
+    displayName: String
+    phoneNumber: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    isEmailVerified: Boolean
+    isPhoneNumberVerified: Boolean
+    createdBy: String
+    updatedBy: String
+    lastLoginAt: DateTime
+}

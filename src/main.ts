@@ -12,11 +12,7 @@ import {
   CatchValidationFilter,
   DefaultRpcExceptionFilter,
 } from './shared/filters/rpc-exception.filter';
-import { Logger as AppLogger } from './shared/logger/services/app-logger.service';
-import { GrpcRequestLoggingInterceptor } from './shared/logger/interceptors/grpc-request-logging.interceptor';
-import { ClsService } from 'nestjs-cls';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { grpcOptions } from './configs/grpc.config';
 import { TimeoutInterceptor } from './shared/interceptors/time-out.interceptor';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from './configs/app.config';
@@ -29,7 +25,7 @@ async function bootstrap(): Promise<void> {
     logAppEnv(logger);
     configure(app);
     logAppPath(logger);
-    await startEvent(app);
+    await app.listen(5000);
   } catch (error) {
     const stack = error instanceof Error ? error.stack : '';
     logger.error(`Error starting server, ${error}`, stack, 'Bootstrap');
@@ -37,16 +33,7 @@ async function bootstrap(): Promise<void> {
   }
 }
 
-async function startEvent(app: INestApplication): Promise<void> {
-  app.connectMicroservice(grpcOptions, {
-    inheritAppConfig: true,
-  });
-
-  await app.startAllMicroservices();
-}
-
 function configure(app: INestApplication): void {
-  const cls = app.get(ClsService);
   const reflector = app.get(Reflector);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalFilters(
@@ -54,9 +41,7 @@ function configure(app: INestApplication): void {
     new DefaultRpcExceptionFilter(),
     new CatchValidationFilter(),
   );
-  app.useLogger(app.get(AppLogger));
   app.useGlobalInterceptors(
-    new GrpcRequestLoggingInterceptor(cls, reflector),
     new TimeoutInterceptor(
       reflector,
       app.get(ConfigService).get<AppConfig>('appConfig')?.timeout || 30000,

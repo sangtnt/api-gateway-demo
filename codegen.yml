@@ -1,0 +1,10 @@
+generates:
+  ./src/shared/graphql/types.generated.ts:
+    schema: './src/**/*.schema.graphql'
+    plugins:
+      - 'typescript'
+    config:
+      declarationKind: 'class'
+      withResultType: true
+      skipTypename: true
+      nonOptionalTypename: false

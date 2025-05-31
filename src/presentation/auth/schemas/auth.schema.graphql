@@ -1,0 +1,10 @@
+input LoginInput {
+    emailOrPhoneNumber: String!
+    password: String!
+}
+
+type LoginOutput {
+    accessToken: String!
+    refreshToken: String!
+    userInfo: User!
+}
