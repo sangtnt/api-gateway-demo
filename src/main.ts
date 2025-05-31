@@ -25,6 +25,7 @@ async function bootstrap(): Promise<void> {
     logAppEnv(logger);
     configure(app);
     logAppPath(logger);
+    app.enableCors();
     await app.listen(5000);
   } catch (error) {
     const stack = error instanceof Error ? error.stack : '';
