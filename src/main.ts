@@ -20,13 +20,14 @@ import { AppConfig } from './configs/app.config';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap');
+  const configService = app.get(ConfigService);
 
   try {
-    logAppEnv(logger);
-    configure(app);
-    logAppPath(logger);
+    logAppEnv(logger, configService);
+    configure(app, configService);
+    logAppPath(logger, configService);
     app.enableCors();
-    await app.listen(5000);
+    await app.listen(configService.get<AppConfig>('appConfig')?.port || 8000);
   } catch (error) {
     const stack = error instanceof Error ? error.stack : '';
     logger.error(`Error starting server, ${error}`, stack, 'Bootstrap');
@@ -34,7 +35,7 @@ async function bootstrap(): Promise<void> {
   }
 }
 
-function configure(app: INestApplication): void {
+function configure(app: INestApplication, configService: ConfigService): void {
   const reflector = app.get(Reflector);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalFilters(
@@ -43,10 +44,7 @@ function configure(app: INestApplication): void {
     new CatchValidationFilter(),
   );
   app.useGlobalInterceptors(
-    new TimeoutInterceptor(
-      reflector,
-      app.get(ConfigService).get<AppConfig>('appConfig')?.timeout || 30000,
-    ),
+    new TimeoutInterceptor(reflector, configService.get<AppConfig>('appConfig')?.timeout || 30000),
   );
 
   app.enableShutdownHooks(
@@ -54,14 +52,16 @@ function configure(app: INestApplication): void {
   );
 }
 
-function logAppPath(logger: LoggerService): void {
-  const host = process.env.HOST || 'localhost';
-  const grpcPort = process.env.GRPC_PORT || '8000';
-  logger.log(`Server gRPC ready at http://${host}:${grpcPort}`);
+function logAppPath(logger: LoggerService, configService: ConfigService): void {
+  const host = configService.get<AppConfig>('appConfig')?.appHost || 'localhost';
+  const port = configService.get<AppConfig>('appConfig')?.port;
+  logger.log(`Server ready at http://${host}:${port}`);
 }
 
-function logAppEnv(logger: LoggerService): void {
-  logger.log(`Environment: ${process.env['NODE_ENV']?.toUpperCase()}`);
+function logAppEnv(logger: LoggerService, configService: ConfigService): void {
+  logger.log(
+    `Environment: ${configService.get<AppConfig>('appConfig')?.appEnvironment?.toUpperCase()}`,
+  );
 }
 
 void bootstrap();
