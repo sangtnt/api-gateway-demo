@@ -15,19 +15,19 @@ import {
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { TimeoutInterceptor } from './shared/interceptors/time-out.interceptor';
 import { ConfigService } from '@nestjs/config';
-import { AppConfig } from './configs/app.config';
+import { EnvSchema } from './configs/env.config';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap');
-  const configService = app.get(ConfigService);
+  const configService = app.get(ConfigService<EnvSchema>);
 
   try {
     logAppEnv(logger, configService);
-    configure(app, configService);
+    configure(app, logger, configService);
     logAppPath(logger, configService);
     app.enableCors();
-    await app.listen(configService.get<AppConfig>('appConfig')?.port || 8000);
+    await app.listen(configService.get<string>('PORT')!);
   } catch (error) {
     const stack = error instanceof Error ? error.stack : '';
     logger.error(`Error starting server, ${error}`, stack, 'Bootstrap');
@@ -35,8 +35,13 @@ async function bootstrap(): Promise<void> {
   }
 }
 
-function configure(app: INestApplication, configService: ConfigService): void {
+function configure(
+  app: INestApplication,
+  logger: Logger,
+  configService: ConfigService<EnvSchema>,
+): void {
   const reflector = app.get(Reflector);
+  app.useLogger(logger);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalFilters(
     new CatchEverythingFilter(),
@@ -44,7 +49,7 @@ function configure(app: INestApplication, configService: ConfigService): void {
     new CatchValidationFilter(),
   );
   app.useGlobalInterceptors(
-    new TimeoutInterceptor(reflector, configService.get<AppConfig>('appConfig')?.timeout || 30000),
+    new TimeoutInterceptor(reflector, configService.get<number>('TIMEOUT')!),
   );
 
   app.enableShutdownHooks(
@@ -52,16 +57,20 @@ function configure(app: INestApplication, configService: ConfigService): void {
   );
 }
 
-function logAppPath(logger: LoggerService, configService: ConfigService): void {
-  const host = configService.get<AppConfig>('appConfig')?.appHost || 'localhost';
-  const port = configService.get<AppConfig>('appConfig')?.port;
-  logger.log(`Server ready at http://${host}:${port}`);
+function logAppPath(logger: LoggerService, configService: ConfigService<EnvSchema>): void {
+  const env = configService.get<string>('NODE_ENV')!;
+  const host = configService.get<string>('HOST')!;
+  const port = configService.get<string>('PORT')!;
+
+  if (env !== 'local') {
+    logger.log(`Server ready at https://${host}:${port}`);
+  } else {
+    logger.log(`Server ready at http://${host}:${port}`);
+  }
 }
 
-function logAppEnv(logger: LoggerService, configService: ConfigService): void {
-  logger.log(
-    `Environment: ${configService.get<AppConfig>('appConfig')?.appEnvironment?.toUpperCase()}`,
-  );
+function logAppEnv(logger: LoggerService, configService: ConfigService<EnvSchema>): void {
+  logger.log(`Environment: ${configService.get<string>('NODE_ENV')!.toUpperCase()}`);
 }
 
 void bootstrap();

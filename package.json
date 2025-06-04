@@ -42,6 +42,7 @@
     "dotenv": "^16.5.0",
     "graphql": "^16.11.0",
     "graphql-scalars": "^1.24.2",
+    "joi": "^17.13.3",
     "kafkajs": "^2.2.4",
     "keyv": "^5.3.3",
     "nestjs-cls": "^5.4.3",
